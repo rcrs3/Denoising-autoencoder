@@ -21,13 +21,13 @@ import utils
 
 class autoencoder:
 	
-	def __init__(self, corruption_level, batch, epoch, input_width, input_height):
+	def __init__(self, corruption_level, batch, epoch, input_width, input_height, colors=1):
 		self.corruption_level = corruption_level
 		self.batch = batch
 		self.epoch = epoch
 		self.Weights = []
 		self.Biases = []
-		self.n_visible = input_width * input_height * 3
+		self.n_visible = input_width * input_height * colors
 		self.n_hidden = self.n_visible
 		self.n_hidden_layers = 30		
 			
@@ -49,6 +49,7 @@ class autoencoder:
 		
 	def fit(self, X):
 		for i in range(self.n_hidden_layers):
+			print(i)
 			tmp = X.copy()
 			X = self.run(self.n_visible, self.n_hidden, data_x = self.add_noise(tmp), data_x_ = X) 
 
@@ -103,12 +104,11 @@ class autoencoder:
 	
 		sess.run(tf.global_variables_initializer())
 	
-	
-		for i in range(epoch):
-			b_x, b_x_ = utils.getBatch(data_x, data_x_, self.batch)
-			sess.run(train_op, feed_dict = {x: b_x, x_: b_x_})
-		Weights.append(sess.run(W))
-		Biases.append(sess.run(bh))
+		for i in range(self.epoch):
+			b_x, b_x_ = utils.get_batch(data_x, data_x_, self.batch)
+			sess.run(train_op, feed_dict = {X: b_x, X_: b_x_})
+		self.Weights.append(sess.run(W))
+		self.Biases.append(sess.run(bh))
 	
 		return sess.run(Y, feed_dict= {X: data_x_})
 		

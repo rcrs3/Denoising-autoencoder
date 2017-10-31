@@ -11,6 +11,6 @@ def xavier_init(n_features, n_components, const = 1):
 	return tf.random_uniform((n_features, n_components), minval = low, maxval = high)
 	
 def get_batch(X, X_, size):
-    a = np.random.choice(len(X), size, replace=False)
+    a = np.random.choice(len(X), size, replace=True)
     return X[a], X_[a]
 
